@@ -13,16 +13,12 @@ func main() {
 	for i := 0; i < len(str2); i++ {
 		print(string(str2[i]), " ")
 	}
-
 	println()
-
 	//str3 := ""
-
 	for i, v := range str2 {
 		println("index:", i, "-->", string(v), " ")
 		//str3 := str3 + string(v)
 	}
-
 }
 
 // for range loop
