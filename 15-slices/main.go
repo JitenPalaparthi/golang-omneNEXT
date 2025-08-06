@@ -18,9 +18,9 @@ func main() {
 	fmt.Println(slice)
 	println(len(slice))
 
-	arr := [10]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	// arr := [10]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
-	slice3 := arr[3:9]
+	// slice3 := arr[3:9]
 
 	// append slice3 to take 1 2 from arrany and prepend it
 }
