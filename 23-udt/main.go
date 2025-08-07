@@ -22,7 +22,7 @@ func main() {
 
 }
 
-type Empty struct{}
+type Empty struct{} // missed call
 
 func (e Empty) Greet() {
 	println("Hey I am empty")
@@ -35,6 +35,7 @@ type T1 struct {
 	N2  int  // 8
 }
 
+// Decending order
 type T2 struct {
 	N1  int  // 8
 	N2  int  // 8

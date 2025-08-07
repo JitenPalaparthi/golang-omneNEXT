@@ -36,6 +36,7 @@ func main() {
 	(*p5).Mobile = "9191919191"
 	p5.Email = "Jp@Spanlet.com"
 
+	// not related to struct, but related to arrays and array pointer
 	arr := [3]int{10, 20, 30}
 	var arrptr *[3]int = &arr
 	(*arrptr)[0] = 100
