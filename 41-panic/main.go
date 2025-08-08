@@ -13,8 +13,8 @@ func main() {
 				// println(100 / num)
 				num := rand.IntN(100)
 				if num%2 == 0 {
-					//panic("panic bcz div by 5") // user defined panic
-					Fatalthis("something wernt wrong.. So fatal here")
+					panic("panic bcz div by 5") // user defined panic
+					// Fatalthis("something wernt wrong.. So fatal here")
 				}
 			}()
 			println("Done-1")
@@ -23,10 +23,8 @@ func main() {
 	}()
 
 	println("Done-3")
-
 	// var ptr *int
 	// fmt.Println(*ptr)
-
 	arr := [2]int{10, 11}
 	for i := 0; i < len(arr); i++ {
 		println(arr[i])
@@ -35,5 +33,5 @@ func main() {
 
 func Fatalthis(msg string) {
 	println(msg)
-	os.Exit(1)
+	os.Exit(1) // non zero
 }
