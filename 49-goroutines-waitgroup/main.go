@@ -75,3 +75,13 @@ func SayHi(wg *sync.WaitGroup) {
 // 1. main is also a goroutine
 // 2. no goroutine waits for other gorouitne to complet its execution, which is including main
 // 3. the order of execution is not guaranteed
+
+// Two functions//
+// Generate even numbers (name,from, to ) GenEven("GenEven-1",10,20)
+// Generate Odd numbers.. (name,from, to ) GenOdd("GenOdd-1",10,20)
+
+// Call this functions 5 times GenEven and 5 Time GenOdd
+
+// Run them as goroutes..
+// Use wait group to complete its execution
+// main should be gracefully exited
