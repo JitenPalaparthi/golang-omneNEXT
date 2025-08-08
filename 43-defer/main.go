@@ -30,5 +30,4 @@ func main() {
 	for _, v := range str {
 		defer print(string(v))
 	}
-
 }
