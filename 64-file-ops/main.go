@@ -21,6 +21,7 @@ var (
 	chLine1        chan string     = make(chan string, 10)
 	chLine2        chan string     = make(chan string, 10)
 	chWords        chan []string   = make(chan []string, 10)
+	chWords2       chan []string   = make(chan []string, 10)
 
 // sig            chan struct{}   = make(chan struct{})
 )
@@ -49,33 +50,39 @@ func main() {
 			line := scanner.Text()
 			chLine2 <- line
 			chLine1 <- line
+			//chWords2 <- strings.Split(line, " ")
 		}
 		close(chLine1)
 		close(chLine2)
+		//close(chWords2)
 		wg.Done()
 	}()
 
 	wg.Add(1)
 	go func() {
 		for line := range chLine1 {
-			if line != "\n" {
-				words := strings.Split(line, " ")
-				chWords <- words
-				// for _, word := range words {
-				// 	mu.Lock()
-				// 	mapWords[word] += 1
-				// 	// _, ok := mapWords[word]
-				// 	// if ok {
-				// 	// 	mapWords[word] += 1
-				// 	// } else {
-				// 	// 	mapWords[word] = 1
-				// 	// }
-				// 	mu.Unlock()
-				// }
-				mu.Lock()
-				WordCount += len(words)
-				mu.Unlock()
-			}
+			wg.Add(1)
+			go func(line string) {
+				if line != "\n" {
+					words := strings.Split(line, " ")
+					chWords <- words
+					// for _, word := range words {
+					// 	mu.Lock()
+					// 	mapWords[word] += 1
+					// 	// _, ok := mapWords[word]
+					// 	// if ok {
+					// 	// 	mapWords[word] += 1
+					// 	// } else {
+					// 	// 	mapWords[word] = 1
+					// 	// }
+					// 	mu.Unlock()
+					// }
+					mu.Lock()
+					WordCount += len(words)
+					mu.Unlock()
+				}
+				wg.Done()
+			}(line)
 		}
 		wg.Done()
 	}()
