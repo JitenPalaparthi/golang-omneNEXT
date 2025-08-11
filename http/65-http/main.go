@@ -4,14 +4,23 @@ import (
 	"demo/handlers"
 	"fmt"
 	"net/http"
+	"os"
 	"runtime"
+)
+
+var (
+	PORT string
 )
 
 func main() {
 
 	//handleMap := make(map[string]func(http.ResponseWriter, *http.Request))
 
-	println("Server started and running on port 8081")
+	PORT = os.Getenv("PORT")
+	if PORT == "" {
+		PORT = "8081"
+	}
+	println("Server started and running on port-->", PORT)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Hello OmneNEXT")
 	})
@@ -21,9 +30,10 @@ func main() {
 	http.HandleFunc("/health", handlers.Health)
 
 	userHandler := handlers.NewUserHandler("users.dat")
+
 	http.HandleFunc("/users", userHandler.Create)
 
-	err := http.ListenAndServe(":8081", nil)
+	err := http.ListenAndServe(":"+PORT, nil)
 	if err != nil {
 		println(err.Error())
 		runtime.Goexit()
@@ -31,4 +41,5 @@ func main() {
 
 	// http.ListenAndServeTLS()
 	//
+
 }

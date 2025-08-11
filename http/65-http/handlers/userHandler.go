@@ -59,12 +59,14 @@ func (uh *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 		return
 	}
-	_, err = utils.SaveToFile(uh.FileName, []byte(string(bytes)+"\n"))
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
-		return
-	}
+	// _, err = utils.SaveToFile(uh.FileName, []byte(string(bytes)+"\n"))
+	// if err != nil {
+	// 	w.WriteHeader(http.StatusBadRequest)
+	// 	w.Write([]byte(err.Error()))
+	// 	return
+	// }
+
+	utils.ChUser <- []byte(string(bytes) + "\n")
 
 	w.Write([]byte("user successfully saved to the file"))
 	w.WriteHeader(http.StatusCreated)
