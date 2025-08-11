@@ -9,8 +9,8 @@ func main() {
 	wg := new(sync.WaitGroup)
 	//var wg *sync.WaitGroup = &sync.WaitGroup{}
 	ch := make(chan int, 10)
-	sig := make(chan struct{})
-	result := make(chan int)
+	//sig := make(chan struct{})
+	result := make(chan int, 2)
 	workers := uint(5)
 	wg.Add(1)
 	go Publish(ch, 20, wg)
@@ -35,8 +35,16 @@ func main() {
 		close(result)
 	}()
 
-	go Receiver(result, sig)
-	<-sig
+	// go Receiver(result, sig)
+	// <-sig
+
+	wg1 := new(sync.WaitGroup)
+	defer wg1.Wait()
+
+	wg1.Add(1)
+	go Receiver1(result, "receiver-1", wg1)
+	wg1.Add(1)
+	go Receiver1(result, "receiver-2", wg1)
 }
 
 func Publish(ch chan int, num uint, wg *sync.WaitGroup) {
@@ -56,4 +64,11 @@ func Receiver(result chan int, sig chan struct{}) {
 		println(r)
 	}
 	sig <- struct{}{}
+}
+
+func Receiver1(result chan int, rec string, wg *sync.WaitGroup) {
+	for r := range result {
+		println("received by", rec, "-->", r)
+	}
+	wg.Done()
 }
