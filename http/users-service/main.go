@@ -1,0 +1,61 @@
+package main
+
+import (
+	"flag"
+	"os"
+	"users-service/database"
+	"users-service/handlers"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
+)
+
+var (
+	DSN   string
+	PORT  string
+	debug bool
+)
+
+func main() {
+	service := "users-service"
+	flag.BoolVar(&debug, "debug", false, "sets log level to debug")
+	flag.Parse()
+	// Default level for this example is info, unless debug flag is present
+	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	if debug {
+		zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	}
+
+	DSN = os.Getenv("DSN")
+	if DSN == "" {
+		DSN = "host=localhost user=app password=app123 dbname=usersdb port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+	}
+	PORT = os.Getenv("PORT")
+	if PORT == "" {
+		PORT = "8080"
+	}
+
+	db, err := database.GetConnection(DSN)
+
+	if err != nil {
+		//log.Fatal().Msg("unable to connect to the database..." + err.Error())
+		log.Fatal().
+			Err(err).
+			Str("service", service).
+			Msgf("unable to connect to the database %s", service)
+	}
+	log.Info().Str("service", service).Msg("database connection is established")
+
+	app := fiber.New()
+	app.Get("/", handlers.Root)
+	app.Get("ping", handlers.Ping)
+	app.Get("/health", handlers.Health)
+
+	userHandler := handlers.NewUserHandler(database.NewUserDB(db))
+	user_group := app.Group("/api/v1/users")
+	user_group.Post("/", userHandler.CreateUser)
+
+	app.Listen(":" + PORT)
+
+}
