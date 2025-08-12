@@ -55,6 +55,8 @@ func main() {
 	userHandler := handlers.NewUserHandler(database.NewUserDB(db))
 	user_group := app.Group("/api/v1/users")
 	user_group.Post("/", userHandler.CreateUser)
+	user_group.Get("/:id", userHandler.GetUserBy)
+	user_group.Get("/all/:limit/:offset", userHandler.GetUsersByLimit)
 
 	app.Listen(":" + PORT)
 

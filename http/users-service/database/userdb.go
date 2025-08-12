@@ -8,6 +8,8 @@ import (
 
 type IUserDB interface {
 	Create(user *models.User) (*models.User, error)
+	GetBy(id string) (*models.User, error)
+	GetByLimit(limit, offset int) ([]models.User, error)
 }
 type UserDb struct {
 	DB *gorm.DB
@@ -26,4 +28,22 @@ func (udb *UserDb) Create(user *models.User) (*models.User, error) {
 		return nil, tx.Error
 	}
 	return user, nil
+}
+
+func (udb *UserDb) GetBy(id string) (*models.User, error) {
+	user := new(models.User)
+	tx := udb.DB.First(user, id)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return user, nil
+}
+
+func (udb *UserDb) GetByLimit(limit, offset int) ([]models.User, error) {
+	var users []models.User
+	tx := udb.DB.Limit(limit).Offset(offset).Find(&users)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return users, nil
 }

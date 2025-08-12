@@ -1,9 +1,10 @@
 package database
 
 import (
-	"log"
+	"fmt"
 	"time"
 
+	"github.com/rs/zerolog/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -18,15 +19,18 @@ func GetConnection(dsn string) (*gorm.DB, error) {
 retry:
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
+		log.Err(err).Str("layer", "db").Msg("failed to connect to the database")
+
 		if count > RETRY_COUNT {
 			return nil, err
 		}
 		count++
-		log.Println("Trying to connect to the database ...for the number of times..", count)
+		log.Warn().Str("layer", "db").Msg("Trying to connect to the database ...for the number of times.." + fmt.Sprint(count))
 		time.Sleep(time.Second * RETRY_DURATION)
 		goto retry
 		//return nil, err
 	} else {
+		log.Info().Str("layer", "db").Msg("successfully connected to the database")
 		return db, nil
 	}
 }

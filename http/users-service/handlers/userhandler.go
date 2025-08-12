@@ -1,11 +1,14 @@
 package handlers
 
 import (
+	"errors"
+	"strconv"
 	"time"
 	"users-service/database"
 	"users-service/models"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/rs/zerolog/log"
 )
 
 type UserHandler struct {
@@ -14,6 +17,8 @@ type UserHandler struct {
 
 type IUserHandler interface {
 	CreateUser(c *fiber.Ctx) error
+	GetUserBy(c *fiber.Ctx) error
+	GetUsersByLimit(c *fiber.Ctx) error
 }
 
 func NewUserHandler(iuserdb database.IUserDB) IUserHandler {
@@ -40,4 +45,45 @@ func (uh *UserHandler) CreateUser(c *fiber.Ctx) error {
 		return err
 	}
 	return c.JSON(user)
+}
+
+func (uh *UserHandler) GetUserBy(c *fiber.Ctx) error {
+	id := c.Params("id") // Retrieves the value of ":id"
+
+	_, err := strconv.Atoi(id)
+	if err != nil {
+		return errors.New("invalid id")
+	}
+
+	user, err := uh.GetBy(id)
+	if err != nil {
+		log.Err(err).Msg("data might not be available or some sql issue")
+		return errors.New("something went wrong or no data available with that id")
+	}
+
+	return c.JSON(user)
+}
+
+func (uh *UserHandler) GetUsersByLimit(c *fiber.Ctx) error {
+	limit := c.Params("limit") // Retrieves the value of ":id"
+
+	l, err := strconv.Atoi(limit)
+	if err != nil {
+		return errors.New("invalid limit")
+	}
+
+	offset := c.Params("offset") // Retrieves the value of ":id"
+
+	of, err := strconv.Atoi(offset)
+	if err != nil {
+		return errors.New("invalid offset")
+	}
+
+	users, err := uh.GetByLimit(l, of)
+	if err != nil {
+		log.Err(err).Msg("data might not be available or some sql issue")
+		return errors.New("something went wrong or no data available with that id")
+	}
+
+	return c.JSON(users)
 }
