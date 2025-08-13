@@ -31,7 +31,8 @@ func main() {
 
 	DSN = os.Getenv("DSN")
 	if DSN == "" {
-		DSN = "host=localhost user=app password=app123 dbname=usersdb port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+		DSN = `host=pg user=app password=app123 dbname=usersdb port=5432 sslmode=disable`
+		log.Info().Msg(DSN)
 	}
 	PORT = os.Getenv("PORT")
 	if PORT == "" {
