@@ -19,6 +19,7 @@ type IUserHandler interface {
 	CreateUser(c *fiber.Ctx) error
 	GetUserBy(c *fiber.Ctx) error
 	GetUsersByLimit(c *fiber.Ctx) error
+	CreateOrder(c *fiber.Ctx) error
 }
 
 func NewUserHandler(iuserdb database.IUserDB) IUserHandler {
@@ -50,12 +51,12 @@ func (uh *UserHandler) CreateUser(c *fiber.Ctx) error {
 func (uh *UserHandler) GetUserBy(c *fiber.Ctx) error {
 	id := c.Params("id") // Retrieves the value of ":id"
 
-	_, err := strconv.Atoi(id)
+	_id, err := strconv.Atoi(id)
 	if err != nil {
 		return errors.New("invalid id")
 	}
 
-	user, err := uh.GetBy(id)
+	user, err := uh.GetBy(uint(_id))
 	if err != nil {
 		log.Err(err).Msg("data might not be available or some sql issue")
 		return errors.New("something went wrong or no data available with that id")
@@ -86,4 +87,27 @@ func (uh *UserHandler) GetUsersByLimit(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(users)
+}
+
+func (uh *UserHandler) CreateOrder(c *fiber.Ctx) error {
+	order := new(models.Order)
+	err := c.BodyParser(order)
+	if err != nil {
+		return err
+	}
+
+	err = order.Validate()
+	if err != nil {
+		return err
+	}
+
+	order.Status = "active"
+	order.LastModified = time.Now().Unix()
+
+	order, err = uh.IUserDB.CreateOrder(order)
+	if err != nil {
+		// log here
+		return fiber.NewError(fiber.StatusBadRequest, "invalid order request")
+	}
+	return c.JSON(order)
 }

@@ -5,10 +5,12 @@ import (
 	"os"
 	"users-service/database"
 	"users-service/handlers"
+	"users-service/models"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"gorm.io/gorm"
 )
 
 var (
@@ -46,7 +48,7 @@ func main() {
 			Msgf("unable to connect to the database %s", service)
 	}
 	log.Info().Str("service", service).Msg("database connection is established")
-
+	Init(db)
 	app := fiber.New()
 	app.Get("/", handlers.Root)
 	app.Get("ping", handlers.Ping)
@@ -58,6 +60,13 @@ func main() {
 	user_group.Get("/:id", userHandler.GetUserBy)
 	user_group.Get("/all/:limit/:offset", userHandler.GetUsersByLimit)
 
+	order_group := app.Group("/api/v1/users/orders")
+	order_group.Post("/", userHandler.CreateOrder)
+
 	app.Listen(":" + PORT)
 
+}
+
+func Init(db *gorm.DB) {
+	db.AutoMigrate(&models.User{}, &models.Order{})
 }

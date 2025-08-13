@@ -1,6 +1,7 @@
 package database
 
 import (
+	"errors"
 	"users-service/models"
 
 	"gorm.io/gorm"
@@ -8,8 +9,9 @@ import (
 
 type IUserDB interface {
 	Create(user *models.User) (*models.User, error)
-	GetBy(id string) (*models.User, error)
+	GetBy(id uint) (*models.User, error)
 	GetByLimit(limit, offset int) ([]models.User, error)
+	CreateOrder(order *models.Order) (*models.Order, error)
 }
 type UserDb struct {
 	DB *gorm.DB
@@ -20,9 +22,6 @@ func NewUserDB(db *gorm.DB) IUserDB {
 }
 
 func (udb *UserDb) Create(user *models.User) (*models.User, error) {
-	if err := udb.DB.AutoMigrate(&models.User{}); err != nil {
-		return nil, err
-	}
 	tx := udb.DB.Create(user)
 	if tx.Error != nil {
 		return nil, tx.Error
@@ -30,9 +29,9 @@ func (udb *UserDb) Create(user *models.User) (*models.User, error) {
 	return user, nil
 }
 
-func (udb *UserDb) GetBy(id string) (*models.User, error) {
+func (udb *UserDb) GetBy(id uint) (*models.User, error) {
 	user := new(models.User)
-	tx := udb.DB.First(user, id)
+	tx := udb.DB.Preload("Orders").First(user, id)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
@@ -46,4 +45,16 @@ func (udb *UserDb) GetByLimit(limit, offset int) ([]models.User, error) {
 		return nil, tx.Error
 	}
 	return users, nil
+}
+
+func (udb *UserDb) CreateOrder(order *models.Order) (*models.Order, error) {
+	_, err := udb.GetBy(order.UserID)
+	if err != nil {
+		return nil, errors.New("invalid user or user not found")
+	}
+	tx := udb.DB.Create(order)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	return order, nil
 }

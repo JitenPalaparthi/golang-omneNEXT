@@ -11,10 +11,11 @@ var (
 )
 
 type User struct {
-	CommonModel        // promoted field
-	Name        string `json:"name"`
-	Email       string `json:"email"`
-	Mobile      string `json:"mobile"`
+	CommonModel         // promoted field
+	Name        string  `json:"name"`
+	Email       string  `json:"email"`
+	Mobile      string  `json:"mobile"`
+	Orders      []Order `json:"orders,omitempty" gorm:"foreignKey:UserID"`
 }
 
 func (u *User) Validate() error {
