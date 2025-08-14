@@ -31,4 +31,26 @@ podman ps
 podman ps -a
 ```
 
+### To remove a running container
 
+```bash
+ podman rm -f pg
+ ```
+### To start a stopped container or to stop a runnign container
+
+```bash
+podman start pg
+podman stop pg
+```
+
+-- To run postgres db ui
+
+```bash
+ podman run -d --name pgui -p 8088:8080 adminer
+ ```
+
+ ### TO create a network
+
+ ```bash
+  podman network create demo-network
+  ```
