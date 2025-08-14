@@ -5,6 +5,7 @@ import (
 	"os"
 	"users-service/database"
 	"users-service/handlers"
+	"users-service/messaging"
 	"users-service/models"
 
 	"github.com/gofiber/fiber/v2"
@@ -17,6 +18,7 @@ var (
 	DSN   string
 	PORT  string
 	debug bool
+	Seeds []string = []string{"localhost:19092", "localhost:29092", "localhost:39092"}
 )
 
 func main() {
@@ -31,7 +33,7 @@ func main() {
 
 	DSN = os.Getenv("DSN")
 	if DSN == "" {
-		DSN = `host=pg user=app password=app123 dbname=usersdb port=5432 sslmode=disable`
+		DSN = `host=localhost user=app password=app123 dbname=usersdb port=5432 sslmode=disable`
 		log.Info().Msg(DSN)
 	}
 	PORT = os.Getenv("PORT")
@@ -50,6 +52,10 @@ func main() {
 	}
 	log.Info().Str("service", service).Msg("database connection is established")
 	Init(db)
+
+	msgUsersCreated := messaging.NewMessaging("omnenext.users.created", Seeds)
+	go msgUsersCreated.ProduceRecords()
+
 	app := fiber.New()
 	app.Get("/", handlers.Root)
 	app.Get("ping", handlers.Ping)
@@ -57,7 +63,7 @@ func main() {
 
 	userHandler := handlers.NewUserHandler(database.NewUserDB(db))
 	user_group := app.Group("/api/v1/users")
-	user_group.Post("/", userHandler.CreateUser)
+	user_group.Post("/", userHandler.CreateUser(msgUsersCreated))
 	user_group.Get("/:id", userHandler.GetUserBy)
 	user_group.Get("/all/:limit/:offset", userHandler.GetUsersByLimit)
 

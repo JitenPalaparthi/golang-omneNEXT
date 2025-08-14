@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"time"
 	"users-service/database"
+	"users-service/messaging"
 	"users-service/models"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,7 +17,7 @@ type UserHandler struct {
 }
 
 type IUserHandler interface {
-	CreateUser(c *fiber.Ctx) error
+	CreateUser(msg *messaging.Messaging) func(c *fiber.Ctx) error
 	GetUserBy(c *fiber.Ctx) error
 	GetUsersByLimit(c *fiber.Ctx) error
 	CreateOrder(c *fiber.Ctx) error
@@ -26,26 +27,29 @@ func NewUserHandler(iuserdb database.IUserDB) IUserHandler {
 	return &UserHandler{iuserdb}
 }
 
-func (uh *UserHandler) CreateUser(c *fiber.Ctx) error {
-	user := new(models.User)
-	err := c.BodyParser(user)
-	if err != nil {
-		return err
-	}
+func (uh *UserHandler) CreateUser(msg *messaging.Messaging) func(c *fiber.Ctx) error {
+	return func(c *fiber.Ctx) error {
+		user := new(models.User)
+		err := c.BodyParser(user)
+		if err != nil {
+			return err
+		}
 
-	err = user.Validate()
-	if err != nil {
-		return err
-	}
+		err = user.Validate()
+		if err != nil {
+			return err
+		}
 
-	user.Status = "active"
-	user.LastModified = time.Now().Unix()
+		user.Status = "active"
+		user.LastModified = time.Now().Unix()
 
-	user, err = uh.Create(user)
-	if err != nil {
-		return err
+		user, err = uh.Create(user)
+		if err != nil {
+			return err
+		}
+		msg.ChMessaging <- user.ToBytes()
+		return c.JSON(user)
 	}
-	return c.JSON(user)
 }
 
 func (uh *UserHandler) GetUserBy(c *fiber.Ctx) error {

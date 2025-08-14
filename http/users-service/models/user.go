@@ -1,6 +1,7 @@
 package models
 
 import (
+	"encoding/json"
 	"errors"
 )
 
@@ -29,4 +30,9 @@ func (u *User) Validate() error {
 		return ErrInvalidMobile
 	}
 	return nil
+}
+
+func (u *User) ToBytes() []byte {
+	bytes, _ := json.Marshal(u)
+	return bytes
 }
