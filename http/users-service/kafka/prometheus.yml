@@ -18,3 +18,7 @@ scrape_configs:
       - targets: ["user-service:8089"]
     metrics_path: /metrics
 
+  - job_name: "postgres"
+    static_configs:
+      - targets: ["pg-exporter:9187"]
+

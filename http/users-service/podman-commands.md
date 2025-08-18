@@ -50,3 +50,17 @@ podman compose . -f ../../kafka/docker-compose-kafka-multinode.yaml up -d
   podman run -d --name user-service -p 8089:8089 --network demo-network -e PORT=8089 docker.io/jpalaparthi/user-service-prom:v02   
 ```                                                                      
 
+## If your Kafka is reachable on the HOST as localhost:19092,29092,39092
+podman run -d --name kafka-ui -p 8080:8080 `
+  -e KAFKA_CLUSTERS_0_NAME=local `
+  -e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=host.containers.internal:19092,host.containers.internal:29092,host.containers.internal:39092 `
+  provectuslabs/kafka-ui:latest
+
+### Postgres Exporter
+
+```
+podman run -d --name pg-exporter --network demo-network 
+  -e DATA_SOURCE_NAME="postgresql://app:app123@pg:5432/userdb?sslmode=disable"
+  -p 9187:9187 `
+  wrouesnel/postgres_exporter
+  ```

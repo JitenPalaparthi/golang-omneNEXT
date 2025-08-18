@@ -21,8 +21,8 @@ var (
 	PORT  string
 	debug bool
 	Seeds []string = []string{"kafka1:9092", "kafka2:9092", "kafka3:9092"}
-	//	Seeds []string = []string{"localhost:19092", "localhost:29092", "localhost:39092"}
-
+	//SeedsD    []string = []string{"localhost:19092", "localhost:29092", "localhost:39092"}
+	//KAFKASEED []string
 )
 
 func main() {
@@ -37,7 +37,7 @@ func main() {
 
 	DSN = os.Getenv("DSN")
 	if DSN == "" {
-		DSN = `host=pg user=app password=app123 dbname=usersdb port=5432 sslmode=disable`
+		DSN = `host=localhost user=app password=app123 dbname=usersdb port=5432 sslmode=disable`
 		log.Info().Msg(DSN)
 	}
 	PORT = os.Getenv("PORT")

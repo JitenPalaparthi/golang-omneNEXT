@@ -17,7 +17,7 @@ type Messaging struct {
 }
 
 func NewMessaging(topic string, brokers []string) *Messaging {
-	return &Messaging{make(chan []byte, 5), topic, brokers}
+	return &Messaging{make(chan []byte), topic, brokers}
 }
 
 func (msg *Messaging) ProduceRecords() {
@@ -44,6 +44,8 @@ func (msg *Messaging) ProduceRecords() {
 	ctx := context.Background()
 	for message := range msg.ChMessaging {
 		record := &kgo.Record{Topic: msg.Topic, Value: message, Key: nil}
+
+		//
 		cl.Produce(ctx, record, func(r *kgo.Record, err error) {
 			//defer wg.Done()
 			if err != nil {
@@ -55,10 +57,10 @@ func (msg *Messaging) ProduceRecords() {
 			fmt.Println("Producer-->", r.ProducerID, "Topid-->", r.Topic, "Partition:", r.Partition, "Offset:", r.Offset, "Value:", user)
 		})
 
-		// Alternatively, ProduceSync exists to synchronously produce a batch of records.
-		if err := cl.ProduceSync(ctx, record).FirstErr(); err != nil {
-			fmt.Printf("record had a produce error while synchronously producing: %v\n", err)
-		}
+		// // Alternatively, ProduceSync exists to synchronously produce a batch of records.
+		// if err := cl.ProduceSync(ctx, record).FirstErr(); err != nil {
+		// 	fmt.Printf("record had a produce error while synchronously producing: %v\n", err)
+		// }
 	}
 	cl.Flush(ctx)
 	log.Print("Closed publishing data")
