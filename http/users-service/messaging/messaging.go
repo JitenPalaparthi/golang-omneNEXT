@@ -17,7 +17,7 @@ type Messaging struct {
 }
 
 func NewMessaging(topic string, brokers []string) *Messaging {
-	return &Messaging{make(chan []byte), topic, brokers}
+	return &Messaging{make(chan []byte, 5), topic, brokers}
 }
 
 func (msg *Messaging) ProduceRecords() {
