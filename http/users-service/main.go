@@ -8,6 +8,8 @@ import (
 	"users-service/messaging"
 	"users-service/models"
 
+	fiberprometheus "github.com/ansrivas/fiberprometheus/v2"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -18,7 +20,9 @@ var (
 	DSN   string
 	PORT  string
 	debug bool
-	Seeds []string = []string{"localhost:19092", "localhost:29092", "localhost:39092"}
+	Seeds []string = []string{"kafka1:9092", "kafka2:9092", "kafka3:9092"}
+	//	Seeds []string = []string{"localhost:19092", "localhost:29092", "localhost:39092"}
+
 )
 
 func main() {
@@ -33,7 +37,7 @@ func main() {
 
 	DSN = os.Getenv("DSN")
 	if DSN == "" {
-		DSN = `host=localhost user=app password=app123 dbname=usersdb port=5432 sslmode=disable`
+		DSN = `host=pg user=app password=app123 dbname=usersdb port=5432 sslmode=disable`
 		log.Info().Msg(DSN)
 	}
 	PORT = os.Getenv("PORT")
@@ -57,6 +61,11 @@ func main() {
 	go msgUsersCreated.ProduceRecords()
 
 	app := fiber.New()
+
+	prom := fiberprometheus.New(service)
+	prom.RegisterAt(app, "/metrics") // exposes Prometheus metrics here
+	app.Use(prom.Middleware)         // automatic request metrics
+
 	app.Get("/", handlers.Root)
 	app.Get("ping", handlers.Ping)
 	app.Get("/health", handlers.Health)

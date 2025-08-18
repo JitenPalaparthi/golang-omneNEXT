@@ -1,1 +1,1 @@
-podman exec -it kafka1 kafka-topics --create --topic omnenext.demo.v1 --bootstrap-server \ kafka1:9092kafka2:9092,kafka3:9092 --replication-factor 3 --partitions 3
+podman exec -it kafka1 kafka-topics --create --topic omnenext.users.created --bootstrap-server \ kafka1:9092kafka2:9092,kafka3:9092 --replication-factor 3 --partitions 10

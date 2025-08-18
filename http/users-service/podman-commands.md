@@ -23,3 +23,30 @@
 4. User similar config file of nginx that is used for the demo
 
 5. Test the application
+
+- Run database and ui
+
+```bash
+podman run -d --name pg -p 5432:5432 --network demo-network -e POSTGRES_USER=app -e POSTGRES_PASSWORD=app123 -e POSTGRES_DB=usersdb postgres:latest
+
+podman run -d --name dbui -p 28080:8080 --network demo-network adminer
+
+```
+- Run kafka
+
+```bash
+podman compose . -f ../../kafka/docker-compose-kafka-multinode.yaml up -d
+```
+-- run prometheus with config file
+```bash
+
+ podman run -d --name prometheus --network demo-network -v C:\Users\PalaparthiJitendrana\workspace\go-demos\http\prometheus\prometheus.yml:/opt/bitnami/prometheus/conf/prometheus.yml:ro -p 9090:9090 bitnami/prometheus:latest
+
+```
+- Run the built application 
+- IF the application is built 
+
+```bash
+  podman run -d --name user-service -p 8089:8089 --network demo-network -e PORT=8089 docker.io/jpalaparthi/user-service-prom:v02   
+```                                                                      
+
