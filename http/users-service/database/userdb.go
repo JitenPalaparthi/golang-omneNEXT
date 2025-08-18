@@ -44,6 +44,7 @@ func (udb *UserDb) GetByLimit(limit, offset int) ([]models.User, error) {
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
+
 	return users, nil
 }
 
