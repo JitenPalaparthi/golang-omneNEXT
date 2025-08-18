@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"os"
+	"strings"
 	"users-service/database"
 	"users-service/handlers"
 	"users-service/messaging"
@@ -20,9 +21,10 @@ var (
 	DSN   string
 	PORT  string
 	debug bool
-	Seeds []string = []string{"kafka1:9092", "kafka2:9092", "kafka3:9092"}
+	//Seeds []string = []string{"kafka1:9092", "kafka2:9092", "kafka3:9092"}
 	//SeedsD    []string = []string{"localhost:19092", "localhost:29092", "localhost:39092"}
 	//KAFKASEED []string
+	SEEDS string
 )
 
 func main() {
@@ -45,6 +47,11 @@ func main() {
 		PORT = "8080"
 	}
 
+	SEEDS = os.Getenv("KAFKA_BROKERS")
+	if SEEDS == "" {
+		SEEDS = "localhost:19092, localhost:29092, localhost:39092"
+	}
+
 	db, err := database.GetConnection(DSN)
 
 	if err != nil {
@@ -57,7 +64,7 @@ func main() {
 	log.Info().Str("service", service).Msg("database connection is established")
 	Init(db)
 
-	msgUsersCreated := messaging.NewMessaging("omnenext.users.created", Seeds)
+	msgUsersCreated := messaging.NewMessaging("omnenext.users.created", strings.Split(SEEDS, ","))
 	go msgUsersCreated.ProduceRecords()
 
 	app := fiber.New()
