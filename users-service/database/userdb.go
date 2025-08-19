@@ -13,6 +13,7 @@ type IUserDB interface {
 	GetByLimit(limit, offset int) ([]models.User, error)
 	CreateOrder(order *models.Order) (*models.Order, error)
 }
+
 type UserDb struct {
 	DB *gorm.DB
 }
