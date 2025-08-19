@@ -35,3 +35,9 @@ go tool cover -html models-cover.out
 go get github.com/golang/mock/gomock
 go install github.com/golang/mock/mockgen@latest
 ```
+
+### Run mockgen command for database/userdb.go
+
+```bash
+mockgen -source=database/userdb.go -destination=internal/mocks/mock_userdb.go -package=mocks
+```

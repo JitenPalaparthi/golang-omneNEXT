@@ -31,6 +31,10 @@ retry:
 		//return nil, err
 	} else {
 		log.Info().Str("layer", "db").Msg("successfully connected to the database")
+
+		sqldb, _ := db.DB()
+		sqldb.SetMaxOpenConns(10)
+
 		return db, nil
 	}
 }

@@ -1,3 +1,4 @@
+//go:generate mockgen -source=user.go -destination=../internal/mocks/mock_user.go -package=mocks
 package models
 
 import (
@@ -35,4 +36,10 @@ func (u *User) Validate() error {
 func (u *User) ToBytes() []byte {
 	bytes, _ := json.Marshal(u)
 	return bytes
+}
+
+type IUser interface {
+	Validate() error
+	ToBytes() []byte
+	ToString() string
 }
