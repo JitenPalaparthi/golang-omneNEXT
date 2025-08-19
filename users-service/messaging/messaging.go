@@ -43,6 +43,7 @@ func (msg *Messaging) ProduceRecords() {
 	defer cl.Close()
 	ctx := context.Background()
 	for message := range msg.ChMessaging {
+
 		record := &kgo.Record{Topic: msg.Topic, Value: message, Key: nil}
 
 		//
