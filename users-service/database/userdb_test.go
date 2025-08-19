@@ -93,5 +93,28 @@ func TestCrateUser(t *testing.T) {
 	if user.ID != 1 {
 		t.Fatalf("The user id should be 1 but it is %d", user.ID)
 	}
-
 }
+
+func TestGetByUser(t *testing.T) {
+	db := NewInMemoryGorm(t, true)
+
+	udb := database.NewUserDB(db)
+	user := &models.User{Name: "Jiten", Email: "JitenP@outlook.com", Mobile: "9618558500", CommonModel: models.CommonModel{Status: "active", LastModified: time.Now().Unix()}}
+
+	user, err := udb.Create(user)
+	assert.Equal(t, err, nil)
+	if user.ID != 1 {
+		t.Fatalf("The user id should be 1 but it is %d", user.ID)
+	}
+
+	expectedUser := &models.User{Name: "Jiten", Email: "JitenP@outlook.com", Mobile: "9618558500", CommonModel: models.CommonModel{ID: 1, Status: "active", LastModified: time.Now().Unix()}}
+	actualUser, err := udb.GetBy(user.ID)
+	actualUser.Orders = nil
+	assert.Equal(t, err, nil)
+	// assert.Equal(t, expectedUser.ID, actualUser.ID)
+	// assert.Equal(t, expectedUser.Name, actualUser.Name)
+	assert.Equal(t, expectedUser, actualUser)
+}
+
+// &models.User{CommonModel:models.CommonModel{ID:0x1, Status:"active", LastModified:1755599173}, Name:"Jiten", Email:"JitenP@outlook.com", Mobile:"9618558500", Orders:[]models.Order(nil)}
+// &models.User{CommonModel:models.CommonModel{ID:0x1, Status:"active", LastModified:1755599173}, Name:"Jiten", Email:"JitenP@outlook.com", Mobile:"9618558500", Orders:[]models.Order{}}
