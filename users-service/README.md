@@ -27,3 +27,11 @@ go test -timeout 30s -coverprofile=models-cover.out users-service/models
 ```bash
 go tool cover -html models-cover.out
 ```
+
+
+### Gomock
+
+```bash
+go get github.com/golang/mock/gomock
+go install github.com/golang/mock/mockgen@latest
+```
