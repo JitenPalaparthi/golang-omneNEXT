@@ -1,0 +1,63 @@
+networks:
+  redisnet:
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+services:
+  redis-7000:
+    image: redis:7.2-alpine
+    container_name: redis-7000
+    command: >
+      sh -c "redis-server
+      --port 7000
+      --cluster-enabled yes
+      --cluster-config-file nodes.conf
+      --cluster-node-timeout 5000
+      --appendonly yes
+      --cluster-announce-port 7000
+      --cluster-announce-bus-port 17000"
+    ports:
+      - "7000:7000"
+      - "17000:17000"
+    networks:
+      redisnet:
+        ipv4_address: 172.28.0.10
+
+  redis-7001:
+    image: redis:7.2-alpine
+    container_name: redis-7001
+    command: >
+      sh -c "redis-server
+      --port 7001
+      --cluster-enabled yes
+      --cluster-config-file nodes.conf
+      --cluster-node-timeout 5000
+      --appendonly yes
+      --cluster-announce-port 7001
+      --cluster-announce-bus-port 17001"
+    ports:
+      - "7001:7001"
+      - "17001:17001"
+    networks:
+      redisnet:
+        ipv4_address: 172.28.0.11
+
+  redis-7002:
+    image: redis:7.2-alpine
+    container_name: redis-7002
+    command: >
+      sh -c "redis-server
+      --port 7002
+      --cluster-enabled yes
+      --cluster-config-file nodes.conf
+      --cluster-node-timeout 5000
+      --appendonly yes
+      --cluster-announce-port 7002
+      --cluster-announce-bus-port 17002"
+    ports:
+      - "7002:7002"
+      - "17002:17002"
+    networks:
+      redisnet:
+        ipv4_address: 172.28.0.12
