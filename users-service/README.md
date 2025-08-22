@@ -71,3 +71,13 @@ go test -run=^$ -bench=. -benchtime=5s -cpuprofile=cpu.out user-service/strings
 go tool pprof user-service/strings cpu.out 
 ```
 
+### Remote debugging
+
+``` bash
+# Attach to a PID instead of exec
+dlv --headless --listen=:2345 --api-version=2 --accept-multiclient attach <PID>
+
+# Or debug 'test' and let it wait for connections
+dlv --headless --listen=:2345 --api-version=2 --accept-multiclient test 
+```
+

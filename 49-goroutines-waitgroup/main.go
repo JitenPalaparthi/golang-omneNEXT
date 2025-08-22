@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"runtime"
 	"sync"
 	"time"
@@ -22,6 +23,7 @@ func init() {
 }
 
 func main() {
+	go Greet()
 	wg.Add(1)
 	go func() {
 		println("Hello OmneNEXT")
@@ -50,9 +52,9 @@ func main() {
 		c := 0
 		for {
 			c++
-			time.Sleep(time.Second * 1)
+			time.Sleep(time.Second * 5)
 			println("----->", c)
-			if c > 10 {
+			if c > 10000 {
 				println("Exiting this gorountine")
 				wg.Done()
 				runtime.Goexit()
@@ -65,6 +67,11 @@ func main() {
 
 	println("End of main")
 	wg.Wait()
+}
+
+//go:noinline
+func Greet() {
+	fmt.Println("Hello OmneNEXT tech")
 }
 
 func SayHi(wg *sync.WaitGroup) {
