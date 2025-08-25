@@ -1,0 +1,203 @@
+ Id CommandLine
+  -- -----------
+   1 kubectl
+   2 clear
+   3 minikube
+   4 kubectl get all -A
+   5 kubectl get all -l
+   6 kubectl get all -A
+   7 ls
+   8 cd .\.minikube
+   9 cd ..
+  10 cd .\.kube\
+  11 ls
+  12 cat .\config
+  13 kubectl config
+  14 kubectl config get-contexts
+  15 cat .\config
+  16 kubectl config get-contexts
+  17 kubectl config get-current-context
+  18 kubectl config current-context
+  19 kubectl config current-context
+  20 kubectl config
+  21 clear
+  22 kubectl --kubeconfig "$HOME\.kube\config.yaml" get pods
+  23 kubectl --kubeconfig "$HOME\.kube\config" get pods
+  24 kubectl --kubeconfig "$HOME\.kube\config" get pods -A
+  25 cat config
+  26 cd ..\.minikube\
+  27 ls
+  28 cd .\certs\
+  29 ls
+  30 clear
+  31 cd .
+  32 cd ..
+  33 clear
+  34 ls
+  35 kubectl config get-contexts
+  36 clear
+  37 kubectl api-resources
+  38 clear
+  39 cd ..\workspace\go-demos\kube\
+  40 kubectl apply -f .\create-namespace.yaml
+  41 kubectl apply -f .\create-namespace.yaml
+  42 kubectl get ns
+  43 kubectl get all -A
+  44 kubectl api-resources
+  45 clear
+  46 podman images
+  47 kubectl apply -f .\nginx-pod.yaml
+  48 kubectl get all -n demo
+  49 kubectl get all -n demo
+  50 kubectl get po -n demo
+  51 kubectl get all -n demo
+  52 kubectl describe pod/nginx-pod -n demo
+  53 kubectl get all -A
+  54 kubectl
+  55 kubectl explain pod.spec
+  56 clear
+  57 kubectl apply -f .\nginx-service.yaml
+  58 kubectl get all -n demo
+  59 minikube services
+  60 minikube service list
+  61 minikube service
+  62 minikube service nginx-service -n demo
+  63 clear
+  64 kubectl get all -n demo
+  65 minikube service list
+  66 minikube service nginx-service -n demo
+  67 clear
+  68 cd .\demo-go\
+  69 ls
+  70 clear
+  71 kubectl apply -f .\kube.yaml
+  72 clear
+  73 kubectl get all -n demo
+  74 minikube service demo-app-service -n demo
+  75 kubectl get all -n demo
+  76 clear
+  77 docker ps
+  78 clear
+  79 podman ps
+  80 podman run --name demo-app -p 8085:8080 -d docker.io/jpalaparthi/omnenext-demo:v1
+  81 curl localhost:8085/ping
+  82 curl http://localhost:8085/ping
+  83 curl http://localhost:8085/get
+  84 curl http://localhost:8085/get
+  85 clear
+  86 kubectl get all -n demo
+  87 minikube service list
+  88 kubectl apply -f .\kube.yaml
+  89 minikube service list
+  90 minikube service demo-app-service -n demo
+  91 clear
+  92 kubectl delete ns demo
+  93 clear
+  94 kubectl apply -f .\kube.yaml
+  95 kubectl apply -f .\kube.yaml
+  96 clear
+  97 kubectl get all -n demo
+  98 kubectl describe pod/demo-app-pod -n demo
+  99 clear
+ 100 minikube service demo-app-service -n demo
+ 101 clear
+ 102 kubectl apply -f .\kube.yaml
+ 103 kubectl get all -n demo
+ 104 minikube service demo-app-servive -n demo
+ 105 minikube service demo-app-service -n demo
+ 106 clear
+ 107 kubectl get pods -n demo
+ 108 kubectl exec -it demo-app-pod bash -n demo
+ 109 kubectl pod exec -it demo-app-pod bash -n demo
+ 110 kubectl exec pod -it demo-app-pod bash -n demo
+ 111 kubectl exec -n demo -it pod/demo-aoo-pod -- /bin/sh
+ 112 kubectl exec -n demo -it pod/demo-app-pod -- /bin/sh
+ 113 kubectl exec -n demo -it pod/demo-app-pod -c demo-app-container -- /bin/sh
+ 114 history
+ 115 clear
+ 116 kubectl get all -n demo
+ 117 kubectl api-resources
+ 118 clear
+ 119 kubectl delete ns demo
+ 120 kubectl get all -n demo
+ 121 clear
+ 122 clear
+ 123 kubectl apply -f .\deployment.yaml
+ 124 kubectl get all -n demo
+ 125 clear
+ 126 kubectl get all -n demo
+ 127 kubectl
+ 128 clear
+ 129 kubectl scale
+ 130 kubectl scale replicas=5 deployment/demo-app-deployment -n demo
+ 131 kubectl scale replicas 5 deployment/demo-app-deployment -n demo
+ 132 kubectl scale --replicas 5 deployment/demo-app-deployment -n demo
+ 133 kubectl get all -n demo
+ 134 kubectl scale --replicas 50 deployment/demo-app-deployment -n demo
+ 135 kubectl get all -n demo
+ 136 kubectl get all -n demo
+ 137 kubectl get all -n demo
+ 138 kubectl scale --replicas 5 deployment/demo-app-deployment -n demo
+ 139 kubectl get all -n demo
+ 140 kubectl get all -n demo
+ 141 clear
+ 142 minikube service demo-app-service -n demo
+ 143 minikube service demo-app-service -n demo
+ 144 clear
+ 145 kubectl
+ 146 kubectl autoscale
+ 147 kubectl autoscale --help
+ 148 clear
+ 149   kubectl autoscale deployment demo-app-deployment -n demo --max=50 --min=2 --cpu-percent=80
+ 150 kubectl get all -n demo
+ 151 watch
+ 152 clear
+ 153 kubectl apply -f .\deployment.yaml
+ 154 minikube service demo-app-service -n demo
+ 155 clear
+ 156 kubectl get all -n demo
+ 157 kubectl
+ 158 clear
+ 159 kubectl rollback --help
+ 160 kubectl
+ 161 kubectl rollout --help
+ 162 kubectl rollout history
+ 163 kubectl rollout history deployment demo-app-deployment -n demo
+ 164 kubectl rollout undo deployment demo-app-deployment -n demo
+ 165 minikube service demo-app-service -n demo
+ 166 kubectl rollout history deployment demo-app-deployment -n demo
+ 167 kubectl get all -n demo
+ 168 kubectl rollout history deployment demo-app-deployment -n demo
+ 169 kubectl rollout undo  --revision=2  deployment demo-app-deployment -n demo
+ 170 kubectl rollout undo  --to-revision=2  deployment demo-app-deployment -n demo
+ 171 clear
+ 172 $CAUSE = "Bump api to v2.3.1 (JIRA-1234)"
+ 173 kubectl annotate deploy/api kubernetes.io/change-cause="$CAUSE" --overwrite
+ 174 kubectl apply -f api-deployment.yaml
+ 175 $CAUSE = "api with magic number v3"
+ 176 env
+ 177 clear
+ 178 $CAUSE = "api with magic number v3"
+ 179 kubectl annotate deploy/api kubernetes.io/change-cause="$CAUSE" --overwrite
+ 180 kubectl annotate deploy kubernetes.io/change-cause="$CAUSE" --overwrite
+ 181 kubectl annotate deploy/api kubernetes.io/change-cause="$CAUSE" --overwrite
+ 182 $CAUSE = "api with magic number v3"
+ 183 kubectl apply -f .\deployment.yaml
+ 184 kubectl apply -f .\deployment.yaml
+ 185 kubectl rollout history deployment demo-app-deployment -n demo
+ 186 kubectl annotate deploy/api "kubernetes.io/change-cause=$CAUSE" --overwrite
+ 187 kubectl apply -f .\deployment.yaml
+ 188 $CAUSE = 'Upgrade api to v2.4.0 (fix auth timeout)'
+ 189 kubectl annotate deploy/api "kubernetes.io/change-cause=$CAUSE" --overwrite
+ 190 kubectl -n demo annotate deploy/api "kubernetes.io/change-cause=$CAUSE" --overwrite
+ 191 kubectl rollout history deployment demo-app-deployment -n demo
+ 192 kubectl api-resources
+ 193 kubectl -n demo annotate deployment/demo-app-deployment "kubernetes.io/change-cause=$CAUSE" --overwrite
+ 194 kubectl apply -f .\deployment.yaml
+ 195 kubectl rollout history deployment demo-app-deployment -n demo
+ 196 kubectl edit deploy/demo-app-deployment -n demo
+ 197 kubectl edit deploy/demo-app-deployment -n demo
+ 198 clear
+ 199 kubectl scale --replicas=200 deployment demo-app-deployment -n demo
+ 200 kubectl scale --replicas=200 deployment demo-app-deployment -n demo
+
