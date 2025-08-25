@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dbconfig
+  namespace: demo
+data:
+  # Example:
+  # password: {{ .Values.password | b64enc }}
+  POSTGRES_USER: app
+  POSTGRES_PASSWORD: app123
+  POSTGRES_DB: usersdb
