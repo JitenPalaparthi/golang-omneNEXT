@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"time"
 	"users-service/database"
-	"users-service/messaging"
 	"users-service/models"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,7 +17,7 @@ type UserHandler struct {
 }
 
 type IUserHandler interface {
-	CreateUser(msg *messaging.Messaging) func(c *fiber.Ctx) error
+	CreateUser() func(c *fiber.Ctx) error
 	GetUserBy(c *fiber.Ctx) error
 	GetUsersByLimit(c *fiber.Ctx) error
 	CreateOrder(c *fiber.Ctx) error
@@ -28,7 +27,7 @@ func NewUserHandler(iuserdb database.IUserDB) IUserHandler {
 	return &UserHandler{iuserdb}
 }
 
-func (uh *UserHandler) CreateUser(msg *messaging.Messaging) func(c *fiber.Ctx) error {
+func (uh *UserHandler) CreateUser() func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		user := new(models.User)
 		err := c.BodyParser(user)

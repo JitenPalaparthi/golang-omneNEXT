@@ -37,7 +37,7 @@ func main() {
 
 	DSN = os.Getenv("DSN")
 	if DSN == "" {
-		DSN = `host=localhost user=app password=app123 dbname=usersdb port=5432 sslmode=disable`
+		DSN = `host=db-service.demo.svc.cluster.local user=app password=app123 dbname=usersdb port=5432 sslmode=disable`
 		log.Info().Msg(DSN)
 	}
 	PORT = os.Getenv("PORT")
@@ -77,7 +77,7 @@ func main() {
 
 	userHandler := handlers.NewUserHandler(database.NewUserDB(db))
 	user_group := app.Group("/api/v1/users")
-	user_group.Post("/", userHandler.CreateUser(msgUsersCreated))
+	user_group.Post("/", userHandler.CreateUser())
 	user_group.Get("/:id", userHandler.GetUserBy)
 	user_group.Get("/all/:limit/:offset", userHandler.GetUsersByLimit)
 

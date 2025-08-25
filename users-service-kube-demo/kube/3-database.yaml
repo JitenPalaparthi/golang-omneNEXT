@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  pgdb
+  name: pgdb
   namespace: demo
   labels:
     type: db
@@ -62,11 +62,7 @@ metadata:
 spec:
   selector:
     type: db
-  type: ClusterIP
-  sessionAffinity: None
-  sessionAffinityConfig:
-    clientIP:
-      timeoutSeconds: 10800
+  type: LoadBalancer
   ports:
   - name: db-service
     protocol: TCP
