@@ -6,6 +6,8 @@ package main
 
 import (
 	"context"
+	"demo/storage"
+	"fmt"
 	"log"
 	"os"
 
@@ -32,8 +34,10 @@ var (
 )
 
 func main() {
+
 	// Fiber instance
-	app := fiber.New()
+
+	app := fiber.New(fiber.Config{BodyLimit: 50 * 1024 * 1024})
 
 	s3Client, err := minio.New(endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(accessKey, secretKey, ""),
@@ -48,6 +52,10 @@ func main() {
 	// Routes
 	app.Post("/upload", func(c *fiber.Ctx) error {
 		// Get first file from form field "document":
+		//c.SaveFileToStorage()
+
+		//fiber.Storage
+
 		file, err := c.FormFile("document")
 		if err != nil {
 			return err
@@ -59,15 +67,43 @@ func main() {
 		}
 		defer f.Close()
 
+		err = c.SaveFile(file, fmt.Sprintf("./uploads/%s", file.Filename))
+		if err != nil {
+			log.Println(err.Error())
+			return fiber.ErrBadRequest
+		}
 		info, err := s3Client.PutObject(context.Background(), bucket, file.Filename, f, file.Size, minio.PutObjectOptions{ContentType: "simple/text"})
 		if err != nil {
 			return err
 		}
+
 		log.Println("Uploaded", "demo", " of size: ", info.Size, "Successfully.")
 
 		return nil
 		// Save file to root directory:
 		//return c.SaveFile(file, fmt.Sprintf("./uploads/%s", file.Filename))
+	})
+
+	// Routes
+	app.Post("/direct", func(c *fiber.Ctx) error {
+
+		file, err := c.FormFile("document")
+		if err != nil {
+			return err
+		}
+
+		storage, err := storage.NewStorage(endpoint, accessKey, secretKey, "false", region, bucket, file.Filename, file.Size)
+
+		if err != nil {
+			return err
+		}
+		err = c.SaveFileToStorage(file, "uploads", storage)
+		if err != nil {
+			log.Println(err.Error())
+			return fiber.ErrBadRequest
+		}
+		c.WriteString("File successfully uploaded")
+		return nil
 	})
 
 	// Start server
