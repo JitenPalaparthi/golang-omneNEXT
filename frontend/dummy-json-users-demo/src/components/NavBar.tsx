@@ -1,6 +1,15 @@
 import "../css/output.css"
 import { Link } from "react-router-dom";
 function NavBar() {
+    const isLogin= true;
+    var authLink = <div></div>
+   // const [authLink,setAuthLink]=useState<JSX.Element>(<Link to="/registration" className="hover:text-red-800 dark:hover:text-blue-400">Registration</Link>);
+    if (!isLogin){
+        authLink=<Link to="/registration" className="hover:text-red-800 dark:hover:text-blue-400">Registration</Link>;
+    }else{
+        authLink=<Link to="/registration" className="hover:text-red-800 dark:hover:text-blue-400">Login</Link>;
+    }
+
     return (
         <>
         <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur 
@@ -13,7 +22,8 @@ function NavBar() {
 
                     <ul className="hidden md:flex items-center gap-6 hover:text-red-800 text-gray-700 dark:text-gray-200">
                         <Link to="/" className="hover:text-red-800 dark:hover:text-blue-400">Home</Link>
-                        <Link to="/registration" className="hover:text-red-800 dark:hover:text-blue-400">Registration</Link>
+                        {/* <Link to="/registration" className="hover:text-red-800 dark:hover:text-blue-400">Registration</Link> */}
+                        {authLink}
                         <Link to="/users" className="hover:text-red-800 dark:hover:text-blue-400">Users</Link>
                     </ul>
 
