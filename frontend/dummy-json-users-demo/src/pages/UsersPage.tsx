@@ -5,8 +5,11 @@ import  {type UserType} from '../types/usertype';
 export default function UsersPage() {
   const [users, setUsers] = useState<UserType[]>([]);
   const [loading, setLoading] = useState(true);
+  const [skip,setSkip]=useState(0);
+  const [limit,setLimit]=useState(10);
+
     useEffect(() => {
-    fetch("https://dummyjson.com/users?limit=20")
+    fetch("https://dummyjson.com/users?limit="+limit+"&+skip="+skip)
       .then((res) => res.json())
       .then((data) => {
         setUsers(data.users);
@@ -29,6 +32,7 @@ export default function UsersPage() {
            <User user={user}/>
           //  
         ))}
+        <button>Next</button>
       </div>
     </div>
   );
