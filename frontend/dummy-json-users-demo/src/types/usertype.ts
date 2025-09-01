@@ -1,7 +1,6 @@
 export interface UserType  {
   id: number;
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
-  image: string;
+  password:string;
 };

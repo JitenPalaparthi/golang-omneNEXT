@@ -37,7 +37,7 @@ export default function RegistrationPage() {
 
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:58080/users", {
+      const res = await fetch("http://localhost:8085/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

@@ -9,7 +9,8 @@ export default function UsersPage() {
   const [limit,setLimit]=useState(10);
  
     useEffect(() => {
-    fetch("https://dummyjson.com/users?limit="+limit+"&+skip="+skip)
+   // fetch("https://dummyjson.com/users")?limit="+limit+"&+skip="+skip)
+   fetch("http://localhost:8085/users?limit=5&skip=0")
       .then((res) => res.json())
       .then((data) => {
         setUsers(data.users);
